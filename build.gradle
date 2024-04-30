@@ -35,14 +35,6 @@ String getVersionType() {
 	}
 }
 
-String getMCVersionString() {
-	if (isMCVersionNonRelease()) {
-		return libs.minecraft.get().version
-	}
-	def version = libs.minecraft.get().version.split('\\.')
-	return version[0] + '.' + version[1]
-}
-
 String fetchChangelog() {
 	def changelogText = file('CHANGELOG.md').text
 	def regexVersion = ((String) project.version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
@@ -129,7 +121,7 @@ jar {
 
 modrinth {
 	projectId = project.modrinth_id
-	versionName = "BetterLeads v${project.version} (${getMCVersionString()})"
+	versionName = "BetterLeads v${project.version}"
 	gameVersions = [libs.minecraft.get().version]
 	versionType = isMCVersionNonRelease() ? "beta" : "release"
 	loaders = ["fabric", "quilt"]
@@ -169,7 +161,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 	}
 
 	def changelogContent = fetchChangelog()
-
 	if (changelogContent) {
 		changelogContent = "Changelog:\n\n${changelogContent}"
 	} else {
@@ -183,7 +174,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 17", "Java 18")
 
-	mainFile.displayName = "BetterLeads v${project.version} (${libs.minecraft.get().version})"
+	mainFile.displayName = "BetterLeads v${project.version}"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
 
