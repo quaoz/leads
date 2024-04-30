@@ -21,8 +21,8 @@ if (!(System.getenv("CURSEFORGE_TOKEN") || System.getenv("MODRINTH_TOKEN"))) {
 logger.lifecycle("Preparing version ${version}...")
 
 boolean isMCVersionNonRelease() {
-	return libs.minecraft.get().toString().matches('^\\d\\dw\\d\\d[a-z]$')
-		|| libs.minecraft.get().toString().matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
+	return libs.minecraft.get().version.matches('^\\d\\dw\\d\\d[a-z]$')
+		|| libs.minecraft.get().version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
 }
 
 String getVersionType() {
@@ -35,13 +35,35 @@ String getVersionType() {
 	}
 }
 
-
 String getMCVersionString() {
 	if (isMCVersionNonRelease()) {
-		return libs.minecraft.get().toString()
+		return libs.minecraft.get().version
 	}
-	def version = libs.minecraft.get().toString().split('\\.')
+	def version = libs.minecraft.get().version.split('\\.')
 	return version[0] + '.' + version[1]
+}
+
+String fetchChangelog() {
+	def changelogText = file('CHANGELOG.md').text
+	def regexVersion = ((String) project.version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
+	def changelogRegex = ~"###? ${regexVersion}\\n\\n(( *- .+\\n)+)"
+	def matcher = changelogText =~ changelogRegex
+
+	if (matcher.find()) {
+		def changelogContent = matcher.group(1)
+
+		def changelogLines = changelogText.split('\n')
+		def linkRefRegex = ~'^\\[([A-z\\d _\\-/+.]+)]: '
+		for (int i = changelogLines.length - 1; i > 0; i--) {
+			def line = changelogLines[i]
+			if ((line =~ linkRefRegex).find())
+				changelogContent += '\n' + line
+			else break
+		}
+		return changelogContent
+	} else {
+		return null;
+	}
 }
 
 project.configurations.configureEach {
@@ -123,6 +145,16 @@ modrinth {
 		tasks.modrinth.setEnabled(false)
 		tasks.modrinthSyncBody.setEnabled(false)
 	}
+
+	def changelogContent = fetchChangelog()
+
+	if (changelogContent) {
+		changelog = changelogContent
+	} else {
+		afterEvaluate {
+			tasks.modrinth.setEnabled(false)
+		}
+	}
 }
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
 
@@ -131,6 +163,15 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 
 	if (System.getenv("CURSEFORGE_TOKEN")) {
 		apiToken = System.getenv("CURSEFORGE_TOKEN")
+	} else {
+		setEnabled(false)
+		return
+	}
+
+	def changelogContent = fetchChangelog()
+
+	if (changelogContent) {
+		changelogContent = "Changelog:\n\n${changelogContent}"
 	} else {
 		setEnabled(false)
 		return
@@ -145,6 +186,9 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 	mainFile.displayName = "BetterLeads v${project.version} (${libs.minecraft.get().version})"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
+
+	mainFile.changelogType = "markdown"
+	mainFile.changelog = changelogContent
 }
 
 publishing {
