@@ -22,7 +22,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradle build --parallel --stacktrace
+        run: ./gradlew build --parallel --stacktrace
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
