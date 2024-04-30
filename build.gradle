@@ -25,6 +25,14 @@ boolean isMCVersionNonRelease() {
 		|| libs.minecraft.get().version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
 }
 
+String getMCVersionString() {
+	if (isMCVersionNonRelease()) {
+		return libs.versions.minecraft.get()
+	}
+	def version = libs.versions.minecraft.get().split('\\.')
+	return version[0] + '.' + version[1]
+}
+
 String getVersionType() {
 	if (isMCVersionNonRelease() || version.contains("-alpha.")) {
 		return "alpha"
@@ -121,7 +129,7 @@ jar {
 
 modrinth {
 	projectId = project.modrinth_id
-	versionName = "BetterLeads v${version}"
+	versionName = "BetterLeads v${project.mod_version} (${getMCVersionString()})"
 	gameVersions = [libs.minecraft.get().version]
 	versionType = isMCVersionNonRelease() ? "beta" : "release"
 	loaders = ["fabric", "quilt"]
@@ -131,12 +139,6 @@ modrinth {
 		optional.project "modmenu"
 	}
 	syncBodyFrom = rootProject.file("README.md").text
-
-	if (!System.getenv("MODRINTH_TOKEN")) {
-		project.logger.debug('MODRINTH_TOKEN is not set!')
-		tasks.modrinth.setEnabled(false)
-		tasks.modrinthSyncBody.setEnabled(false)
-	}
 
 	def changelogContent = fetchChangelog()
 
@@ -174,7 +176,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 17", "Java 18")
 
-	mainFile.displayName = "BetterLeads v${version}"
+	mainFile.displayName = "BetterLeads v${project.mod_version} (${getMCVersionString()})"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
 
