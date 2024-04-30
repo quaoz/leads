@@ -9,3 +9,7 @@
 ### 1.2.1
 
 - Update buildscript.
+
+### 1.2.2
+
+- Allow leashes to be chained based on [codehz-mcmods/chain-lead](https://github.com/codehz-mcmods/chain-lead) ([#10](https://github.com/quaoz/BetterLeads/issues/10))

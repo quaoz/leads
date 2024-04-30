@@ -6,5 +6,6 @@
   "betterleads.turtles.option": "Leashable turtles",
   "betterleads.ambients.option": "Leashable bats",
   "betterleads.pandas.option": "Leashable pandas",
+  "betterleads.chain.option": "Chainable leashes",
   "gui.done": "Done"
 }
