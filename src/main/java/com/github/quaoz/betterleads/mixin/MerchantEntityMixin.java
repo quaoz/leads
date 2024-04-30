@@ -18,7 +18,7 @@ abstract class MerchantEntityMixin extends PassiveEntity implements Npc, Merchan
 	protected MerchantEntityMixin(EntityType<? extends MerchantEntity> entityType, World world) {
 		super(entityType, world);
 	}
-	
+
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
 		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.villagers_enabled.value());

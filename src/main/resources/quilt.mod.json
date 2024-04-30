@@ -14,8 +14,8 @@
       },
       "contact": {
         "homepage": "https://github.com/quaoz/BetterLeads",
-        "sources":  "https://github.com/quaoz/BetterLeads",
-        "issues":   "https://github.com/quaoz/BetterLeads/issues"
+        "sources": "https://github.com/quaoz/BetterLeads",
+        "issues": "https://github.com/quaoz/BetterLeads/issues"
       },
       "icon": "assets/betterleads/icon.png",
       "license": "LGPL-3.0-only"

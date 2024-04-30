@@ -17,7 +17,7 @@ abstract class AmbientEntityMixin extends MobEntity {
 	protected AmbientEntityMixin(EntityType<? extends AmbientEntity> entityType, World world) {
 		super(entityType, world);
 	}
-	
+
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
 		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.ambients_enabled.value());

@@ -16,7 +16,7 @@ abstract class WaterCreatureEntityMixin extends PathAwareEntity {
 	protected WaterCreatureEntityMixin(EntityType<? extends WaterCreatureEntity> entityType, World world) {
 		super(entityType, world);
 	}
-	
+
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
 		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.water_creatures_enabled.value());

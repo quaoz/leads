@@ -28,41 +28,60 @@ public class SettingsScreen extends SpruceScreen {
 		this.config = BetterLeadsConfig.INSTANCE;
 		this.parent = parent;
 
-		this.merchantsOption = new SpruceBooleanOption("betterleads.merchants.option",
+		this.merchantsOption = new SpruceBooleanOption(
+			"betterleads.merchants.option",
 			this.config.villagers_enabled::value,
 			this.config.villagers_enabled::setValue,
-				Text.translatable("betterleads.merchants.option"), true);
+			Text.translatable("betterleads.merchants.option"),
+			true
+		);
 
-		this.hostilesOption = new SpruceBooleanOption("betterleads.hostiles.option",
+		this.hostilesOption = new SpruceBooleanOption(
+			"betterleads.hostiles.option",
 			this.config.hostiles_enabled::value,
 			this.config.hostiles_enabled::setValue,
-				Text.translatable("betterleads.hostiles.option"), true);
+			Text.translatable("betterleads.hostiles.option"),
+			true
+		);
 
-		this.waterCreaturesOption = new SpruceBooleanOption("betterleads.watercreatures.option",
+		this.waterCreaturesOption = new SpruceBooleanOption(
+			"betterleads.watercreatures.option",
 			this.config.water_creatures_enabled::value,
 			this.config.water_creatures_enabled::setValue,
-				Text.translatable("betterleads.watercreatures.option"), true);
+			Text.translatable("betterleads.watercreatures.option"),
+			true
+		);
 
-		this.turtlesOption = new SpruceBooleanOption("betterleads.turtles.option",
+		this.turtlesOption = new SpruceBooleanOption(
+			"betterleads.turtles.option",
 			this.config.turtles_enabled::value,
 			this.config.turtles_enabled::setValue,
-				Text.translatable("betterleads.turtles.option"), true);
+			Text.translatable("betterleads.turtles.option"),
+			true
+		);
 
-		this.ambientsOption = new SpruceBooleanOption("betterleads.ambients.option",
+		this.ambientsOption = new SpruceBooleanOption(
+			"betterleads.ambients.option",
 			this.config.ambients_enabled::value,
 			this.config.ambients_enabled::setValue,
-				Text.translatable("betterleads.ambients.option"), true);
+			Text.translatable("betterleads.ambients.option"),
+			true
+		);
 
-		this.pandasOption = new SpruceBooleanOption("betterleads.pandas.option",
+		this.pandasOption = new SpruceBooleanOption(
+			"betterleads.pandas.option",
 			this.config.pandas_enabled::value,
 			this.config.pandas_enabled::setValue,
-				Text.translatable("betterleads.pandas.option"), true);
+			Text.translatable("betterleads.pandas.option"),
+			true
+		);
 
-		this.resetOption = SpruceSimpleActionOption.reset(btn -> {
-			this.config.reset();
-			MinecraftClient client = MinecraftClient.getInstance();
-			this.init(client, client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
-		});
+		this.resetOption = SpruceSimpleActionOption.reset(
+			btn -> {
+				this.config.reset();
+				MinecraftClient client = MinecraftClient.getInstance();
+				this.init(client, client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
+			});
 	}
 
 	private int getTextHeight() {

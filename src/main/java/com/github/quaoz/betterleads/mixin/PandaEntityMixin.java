@@ -16,7 +16,7 @@ abstract class PandaEntityMixin extends AnimalEntity {
 	protected PandaEntityMixin(EntityType<? extends PandaEntity> entityType, World world) {
 		super(entityType, world);
 	}
-	
+
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
 		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.pandas_enabled.value());
