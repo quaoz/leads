@@ -1,7 +1,6 @@
 package com.github.quaoz.betterleads.mixin;
 
-
-import com.github.quaoz.betterleads.BetterLeads;
+import com.github.quaoz.betterleads.BetterLeadsConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.AmbientEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -21,6 +20,6 @@ abstract class AmbientEntityMixin extends MobEntity {
 	
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
-		cir.setReturnValue((cir.getReturnValue() || (!this.isLeashed()) && BetterLeads.get().config.getLeashableAmbientMobs()));
+		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.ambients_enabled.value());
 	}
 }

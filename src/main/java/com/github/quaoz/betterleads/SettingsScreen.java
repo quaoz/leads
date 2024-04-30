@@ -7,16 +7,12 @@ import dev.lambdaurora.spruceui.option.SpruceSimpleActionOption;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class SettingsScreen extends SpruceScreen {
-
 	private final BetterLeadsConfig config;
 	private final Screen parent;
 	private final SpruceOption merchantsOption;
@@ -29,37 +25,37 @@ public class SettingsScreen extends SpruceScreen {
 
 	public SettingsScreen(@Nullable Screen parent) {
 		super(Text.translatable("betterleads.menu.title"));
+		this.config = BetterLeadsConfig.INSTANCE;
 		this.parent = parent;
-		this.config = BetterLeads.get().config;
 
 		this.merchantsOption = new SpruceBooleanOption("betterleads.merchants.option",
-				this.config::getLeashableVillagers,
-				this.config::setLeashableVillagers,
+			this.config.villagers_enabled::value,
+			this.config.villagers_enabled::setValue,
 				Text.translatable("betterleads.merchants.option"), true);
 
 		this.hostilesOption = new SpruceBooleanOption("betterleads.hostiles.option",
-				this.config::getLeashableHostileMobs,
-				this.config::setLeashableHostileMobs,
+			this.config.hostiles_enabled::value,
+			this.config.hostiles_enabled::setValue,
 				Text.translatable("betterleads.hostiles.option"), true);
 
 		this.waterCreaturesOption = new SpruceBooleanOption("betterleads.watercreatures.option",
-				this.config::getLeashableWaterCreatures,
-				this.config::setLeashableWaterCreatures,
+			this.config.water_creatures_enabled::value,
+			this.config.water_creatures_enabled::setValue,
 				Text.translatable("betterleads.watercreatures.option"), true);
 
 		this.turtlesOption = new SpruceBooleanOption("betterleads.turtles.option",
-				this.config::getLeashableTurtles,
-				this.config::setLeashableTurtles,
+			this.config.turtles_enabled::value,
+			this.config.turtles_enabled::setValue,
 				Text.translatable("betterleads.turtles.option"), true);
 
 		this.ambientsOption = new SpruceBooleanOption("betterleads.ambients.option",
-				this.config::getLeashableAmbientMobs,
-				this.config::setLeashableAmbientMobs,
+			this.config.ambients_enabled::value,
+			this.config.ambients_enabled::setValue,
 				Text.translatable("betterleads.ambients.option"), true);
 
 		this.pandasOption = new SpruceBooleanOption("betterleads.pandas.option",
-				this.config::getLeashablePandas,
-				this.config::setLeashablePandas,
+			this.config.pandas_enabled::value,
+			this.config.pandas_enabled::setValue,
 				Text.translatable("betterleads.pandas.option"), true);
 
 		this.resetOption = SpruceSimpleActionOption.reset(btn -> {
@@ -77,20 +73,36 @@ public class SettingsScreen extends SpruceScreen {
 	protected void init() {
 		super.init();
 
-		SpruceOptionListWidget list = new SpruceOptionListWidget(Position.of(this, 0, 43), this.width, this.height - 43 - 29 - this.getTextHeight());
-		list.addSingleOptionEntry(this.merchantsOption);
-		list.addSingleOptionEntry(this.hostilesOption);
-		list.addSingleOptionEntry(this.waterCreaturesOption);
-		list.addSingleOptionEntry(this.turtlesOption);
-		list.addSingleOptionEntry(this.ambientsOption);
-		list.addSingleOptionEntry(this.pandasOption);
-		this.addDrawableChild(list);
+		SpruceOptionListWidget list = new SpruceOptionListWidget(
+			Position.of(this, 0, 43), this.width, this.height - 43 - 29 - this.getTextHeight()
+		);
+		list.addSingleOptionEntry(merchantsOption);
+		list.addSingleOptionEntry(hostilesOption);
+		list.addSingleOptionEntry(waterCreaturesOption);
+		list.addSingleOptionEntry(turtlesOption);
+		list.addSingleOptionEntry(ambientsOption);
+		list.addSingleOptionEntry(pandasOption);
+		this.addDrawableSelectableElement(list);
 
-		this.addDrawableChild(this.resetOption.createWidget(Position.of(this, this.width / 2 - 155, this.height - 29), 150));
-		this.addDrawableChild(new SpruceButtonWidget(Position.of(this, this.width / 2 - 155 + 160, this.height - 29), 150, 20, Text.translatable("gui.done"),
+		this.addDrawableSelectableElement(
+			this.resetOption.createWidget(
+				Position.of(this, this.width / 2 - 155, this.height - 29), 150
+			)
+		);
+		this.addDrawableSelectableElement(
+			new SpruceButtonWidget(
+				Position.of(
+					this,
+					this.width / 2 - 155 + 160,
+					this.height - 29
+				),
+				150,
+				20,
+				Text.translatable("gui.done"),
 				(btn) -> {
 					assert this.client != null;
 					this.client.setScreen(this.parent);
-				}));
+				})
+		);
 	}
 }

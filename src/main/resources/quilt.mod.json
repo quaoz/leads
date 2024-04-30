@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "betterleads",
+    "version": "${version}",
+    "metadata": {
+      "name": "betterleads",
+      "description": "Allows you to use leads on more entities.",
+      "contributors": {
+        "quaoz": "Owner",
+        "solonovamax": "Contributor",
+        "tyleraharrison": "Contributor"
+      },
+      "contact": {
+        "homepage": "https://github.com/quaoz/BetterLeads",
+        "sources":  "https://github.com/quaoz/BetterLeads",
+        "issues":   "https://github.com/quaoz/BetterLeads/issues"
+      },
+      "icon": "assets/betterleads/icon.png",
+      "license": "LGPL-3.0-only"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "com.github.quaoz.betterleads.BetterLeads",
+      "modmenu": "com.github.quaoz.betterleads.BetterLeadsModMenu"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.19.1"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=7.0.2"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.20"
+      },
+      {
+        "id": "spruceui",
+        "versions": ">=5.0.0"
+      }
+    ]
+  },
+  "mixin": "betterleads.mixins.json"
+}

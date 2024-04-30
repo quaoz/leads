@@ -1,198 +1,113 @@
 plugins {
-	id 'fabric-loom' version '1.2+'
-	id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
 	id 'maven-publish'
-	id 'java-library'
-	id 'com.github.johnrengelman.shadow' version '7.1.2'
-	id "com.modrinth.minotaur" version "2.+"
-	id 'com.matthewprenger.cursegradle' version '1.4.+'
+	alias libs.plugins.quilt.loom
 }
 
-def targetJavaVersion = 17
+base {
+	archivesName = project.archives_base_name
+}
 
+version = "$project.version+${libs.versions.minecraft.get()}"
 group = project.maven_group
-version = "${project.mod_version}+${project.minecraft_version}"
-archivesBaseName = project.archives_base_name
 
-boolean isMCVersionNonRelease() {
-	return project.minecraft_version.matches('^\\d\\dw\\d\\d[a-z]$')
-		|| project.minecraft_version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
-}
-
-String getVersionType() {
-	if (isMCVersionNonRelease() || version.contains("-alpha.")) {
-		return "alpha"
-	} else if (version.contains("-beta.")) {
-		return "beta"
-	} else {
-		return "release"
-	}
-}
-
-String getMCVersionString() {
-	if (isMCVersionNonRelease()) {
-		return project.minecraft_version
-	}
-	def version = project.minecraft_version.split('\\.')
-	return version[0] + '.' + version[1]
+project.configurations.configureEach {
+	exclude(group: "net.fabricmc", module: "fabric-loader")
+	exclude(group: "net.fabricmc.fabric-api")
 }
 
 repositories {
-	mavenCentral()
-
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
 	maven {
-		name = 'Fabric'
-		url = 'https://maven.fabricmc.net/'
+		name 'Gegy'
+		url 'https://maven.gegy.dev'
 	}
-
 	maven {
-		name "Terraformersmc"
-		url = "https://maven.terraformersmc.com/"
-	}
-
-	maven {
-		name "Jitpack"
-		url = "https://jitpack.io"
-	}
-
-	maven {
-		name = "AperLambda"
-		url = 'https://aperlambda.github.io/maven'
-	}
-
-	maven {
-		name = 'Gegy'
-		url = 'https://maven.gegy.dev/'
-	}
-
-	maven {
-		name "Quilt"
-		url "https://maven.quiltmc.org/repository/release"
+		name 'Terraformersmc'
+		url 'https://maven.terraformersmc.com/'
 	}
 }
 
-configurations {
-	shadow
-	api.extendsFrom shadow
+loom {
+	// Loom and Loader both use this block in order to gather more information about your mod.
+	mods {
+		// This should match your mod id.
+		"betterleads" {
+			// Tell Loom about each source set used by your mod here. This ensures that your mod's classes are properly transformed by Loader.
+			sourceSet("main")
+			// If you shade (directly include classes, not JiJ) a dependency into your mod, include it here using one of these methods:
+			// dependency("com.example.shadowedmod:1.2.3")
+			// configuration("exampleShadedConfigurationName")
+		}
+	}
 }
 
+// All the dependencies are declared at gradle/libs.version.toml and referenced with "libs.<id>"
+// See https://docs.gradle.org/current/userguide/platforms.html for information on how version catalogs work.
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "org.quiltmc:quilt-mappings:${minecraft_version}+build.${project.quilt_mappings}:intermediary-v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft libs.minecraft
+	mappings variantOf(libs.quilt.mappings) { classifier 'intermediary-v2' }
+	modImplementation libs.quilt.loader
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	// QSL is not a complete API; You will need Quilted Fabric API to fill in the gaps.
+	// Quilted Fabric API will automatically pull in the correct QSL version.
+	modImplementation libs.quilted.fabric.api
 
-	// ModMenu dependency
-	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-	// SpruceUI dependency
-	modImplementation include("dev.lambdaurora:spruceui:${project.spruceui_version}")
-
-	// Toml Night-Config
-	shadow 'com.electronwill.night-config:core:3.6.6'
-	shadow 'com.electronwill.night-config:toml:3.6.6'
+	// modImplementation libs.bundles.quilted.fabric.api // If you wish to use Fabric API's deprecated modules, you can replace the above line with this one
+	include modImplementation(libs.spruce.ui.get())
+	modImplementation libs.modmenu
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.properties 'version': version, 'group': project.group
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+	filesMatching('quilt.mod.json') {
+		expand 'version': version, 'group': project.group
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
+	it.options.encoding = 'UTF-8'
 	it.options.release = 17
 }
 
 java {
-	sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
-	targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
+	// Still required by IDEs such as Eclipse and Visual Studio Code
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
+	// If you remove this line, sources will not be generated.
 	withSourcesJar()
+
+	// If this mod is going to be a library, then it should also generate Javadocs in order to aid with development.
+	// Uncomment this line to generate them.
+	// withJavadocJar()
 }
 
+// If you plan to use a different file for the license, don't forget to change the file name here!
 jar {
-	from("LICENSE") {
-		rename { "${it}_${archivesBaseName}" }
+	from('LICENSE') {
+		rename { "${it}_${base.archivesName.get()}" }
 	}
 }
 
-shadowJar {
-	dependsOn jar
-	configurations = [project.configurations.shadow]
-	archiveClassifier.set('dev')
-
-	relocate 'com.electronwill.nightconfig', 'com.github.quaoz.shadow.nightconfig'
-}
-
-remapJar.dependsOn(shadowJar)
-
-modrinth {
-	projectId = project.modrinth_id
-
-	versionName = "BetterLeads v${project.mod_version} (${getMCVersionString()})"
-	versionType = isMCVersionNonRelease() ? "beta" : "release"
-
-	gameVersions = [project.minecraft_version]
-	loaders = ["fabric", "quilt"]
-	uploadFile = tasks.remapJar
-
-	dependencies {
-		required.project "fabric-api"
-		optional.project "modmenu"
-	}
-
-	syncBodyFrom = rootProject.file("README.md").text
-}
-tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
-
-curseforge {
-	if (System.getenv("CURSEFORGE_TOKEN")) {
-		apiKey = System.getenv("CURSEFORGE_TOKEN")
-	}
-
-	project {
-		id = project.curseforge_id
-		releaseType = this.getVersionType()
-		addGameVersion project.minecraft_version
-		addGameVersion "Fabric"
-		addGameVersion "Quilt"
-		addGameVersion "Java 17"
-		addGameVersion "Java 18"
-
-		mainArtifact(remapJar) {
-			displayName = "BetterLeads v${project.mod_version} (${project.minecraft_version})"
-
-			relations {
-				requiredDependency "fabric-api"
-				optionalDependency "modmenu"
-			}
-		}
-
-		afterEvaluate {
-			uploadTask.dependsOn("remapJar")
-		}
-	}
-}
-
+// Configure the maven publication
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
 
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
 	}
 }

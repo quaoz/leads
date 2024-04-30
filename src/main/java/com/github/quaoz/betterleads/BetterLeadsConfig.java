@@ -1,107 +1,42 @@
 package com.github.quaoz.betterleads;
 
-import com.electronwill.nightconfig.core.file.FileConfig;
-import net.fabricmc.loader.api.FabricLoader;
-import org.jetbrains.annotations.NotNull;
+import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.loader.api.config.v2.QuiltConfig;
 
-import java.nio.file.Path;
+public class BetterLeadsConfig extends ReflectiveConfig {
+	public static final BetterLeadsConfig INSTANCE = QuiltConfig.create(BetterLeads.MOD_ID, BetterLeads.MOD_ID, BetterLeadsConfig.class);
 
-public class BetterLeadsConfig {
-	public static final Path CONFIG_FILE_PATH = FabricLoader.getInstance().getConfigDir().resolve("betterleads.toml");
-	private static final boolean DEFAULT_VILLAGERS_ENABLED = true;
-	private static final boolean DEFAULT_HOSTILES_ENABLED = false;
-	private static final boolean DEFAULT_WATER_CREATURES_ENABLED = true;
-	private static final boolean DEFAULT_TURTLES_ENABLED = true;
-	private static final boolean DEFAULT_AMBIENTS_ENABLED = false;
-	private static final boolean DEFAULT_PANDAS_ENABLED = false;
-	private final BetterLeads mod;
-	protected FileConfig config;
+	@Comment("Whether villagers and traders can be leashed.")
+	public final TrackedValue<Boolean> villagers_enabled = this.value(true);
 
-	// Reads in the config file
-	public BetterLeadsConfig(@NotNull BetterLeads mod) {
-		this.mod = mod;
-		this.config = FileConfig.builder(CONFIG_FILE_PATH)
-				.defaultResource("/betterleads.toml")
-				.autoreload()
-				.autosave()
-				.build();
-	}
+	@Comment("Whether hostile mobs can be leashed.")
+	public final TrackedValue<Boolean> hostiles_enabled = this.value(false);
 
-	// Loads the config
-	public void load() {
-		this.config.load();
-		this.mod.log("Config loaded");
-	}
+	@Comment("Whether water creatures (fish and squid) can be leashed.")
+	public final TrackedValue<Boolean> water_creatures_enabled = this.value(false);
 
-	// Resets the config
+	@Comment("Whether turtles can be leashed.")
+	public final TrackedValue<Boolean> turtles_enabled = this.value(true);
+
+	@Comment("Whether ambient mobs (bats) can be leashed.")
+	public final TrackedValue<Boolean> ambients_enabled = this.value(false);
+
+	@Comment("Whether pandas can be leashed.")
+	public final TrackedValue<Boolean> pandas_enabled = this.value(true);
+
+	/**
+	 * Resets all the config options.
+	 */
 	public void reset() {
-		this.setLeashableVillagers(DEFAULT_VILLAGERS_ENABLED);
-		this.setLeashableHostileMobs(DEFAULT_HOSTILES_ENABLED);
-		this.setLeashableWaterCreatures(DEFAULT_WATER_CREATURES_ENABLED);
-		this.setLeashableTurtles(DEFAULT_TURTLES_ENABLED);
-		this.setLeashableAmbientMobs(DEFAULT_AMBIENTS_ENABLED);
-		this.setLeashablePandas(DEFAULT_PANDAS_ENABLED);
+		villagers_enabled.removeOverride();
+		hostiles_enabled.removeOverride();
+		water_creatures_enabled.removeOverride();
+		turtles_enabled.removeOverride();
+		ambients_enabled.removeOverride();
+		pandas_enabled.removeOverride();
 
-		this.mod.log("Config reset");
-	}
-
-	// Returns whether villagers can be leashed
-	public boolean getLeashableVillagers() {
-		return this.config.getOrElse("leashable_villagers", DEFAULT_VILLAGERS_ENABLED);
-	}
-
-	// Sets whether villagers can be leashed
-	public void setLeashableVillagers(boolean enabled) {
-		this.config.set("leashable_villagers", enabled);
-	}
-
-	// Returns whether hostiles can be leashed
-	public boolean getLeashableHostileMobs() {
-		return this.config.getOrElse("leashable_hostiles", DEFAULT_HOSTILES_ENABLED);
-	}
-
-	// Sets whether hostiles can be leashed
-	public void setLeashableHostileMobs(boolean enabled) {
-		this.config.set("leashable_hostiles", enabled);
-	}
-
-	// Returns whether water creatures (fish) can be leashed
-	public boolean getLeashableWaterCreatures() {
-		return this.config.getOrElse("leashable_watercreatures", DEFAULT_WATER_CREATURES_ENABLED);
-	}
-
-	// Sets whether water creatures (fish) can be leashed
-	public void setLeashableWaterCreatures(boolean enabled) {
-		this.config.set("leashable_watercreatures", enabled);
-	}
-
-	// Returns whether turtles can be leashed
-	public boolean getLeashableTurtles() {
-		return this.config.getOrElse("leashable_turtles", DEFAULT_TURTLES_ENABLED);
-	}
-
-	// Sets whether turtles can be leashed
-	public void setLeashableTurtles(boolean enabled) {
-		this.config.set("leashable_turtles", enabled);
-	}
-
-	// Returns whether ambient entities (bats) can be leashed
-	public boolean getLeashableAmbientMobs() {
-		return this.config.getOrElse("leashable_ambients", DEFAULT_AMBIENTS_ENABLED);
-	}
-
-	// Sets whether ambient entities (bats) can be leashed
-	public void setLeashableAmbientMobs(boolean enabled) {
-		this.config.set("leashable_ambients", enabled);
-	}
-
-	// Returns whether pandas can be leashed
-	public boolean getLeashablePandas() {
-		return this.config.getOrElse("leashable_pandas", DEFAULT_PANDAS_ENABLED);
-	}
-
-	// Sets whether pandas can be leashed
-	public void setLeashablePandas(boolean enabled) {
-		this.config.set("leashable_pandas", enabled);
+		BetterLeads.LOGGER.info("Reset BetterLeads config");
 	}
 }

@@ -1,30 +1,16 @@
 package com.github.quaoz.betterleads;
 
-import net.fabricmc.api.ModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BetterLeads implements ModInitializer {
-	public static final String MODID = "betterleads";
-	private static BetterLeads INSTANCE;
-	public final Logger logger = LogManager.getLogger(MODID);
-	public final BetterLeadsConfig config = new BetterLeadsConfig(this);
-
-	public static BetterLeads get() {
-		return INSTANCE;
-	}
+	public static final String MOD_ID = "betterleads";
+	public static final Logger LOGGER = LoggerFactory.getLogger("BetterLeads");
 
 	@Override
-	public void onInitialize() {
-		INSTANCE = this;
-		this.config.load();
-	}
-
-	public void log(String info) {
-		this.logger.info("[BetterLeads/INFO] " + info);
-	}
-
-	public void warn(String info) {
-		this.logger.warn("[BetterLeads/WARN] " + info);
+	public void onInitialize(ModContainer mod) {
+		LOGGER.info("Initialised BetterLeads");
 	}
 }
