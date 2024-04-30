@@ -26,6 +26,9 @@ public class BetterLeadsConfig extends ReflectiveConfig {
 	@Comment("Whether pandas can be leashed.")
 	public final TrackedValue<Boolean> pandas_enabled = this.value(true);
 
+	@Comment("Whether leashes can be chained.")
+	public final TrackedValue<Boolean> chain_leashes = this.value(false);
+
 	/**
 	 * Resets all the config options.
 	 */
@@ -36,6 +39,7 @@ public class BetterLeadsConfig extends ReflectiveConfig {
 		turtles_enabled.removeOverride();
 		ambients_enabled.removeOverride();
 		pandas_enabled.removeOverride();
+		chain_leashes.removeOverride();
 
 		BetterLeads.LOGGER.info("Reset BetterLeads config");
 	}

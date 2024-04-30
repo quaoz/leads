@@ -21,6 +21,7 @@ public class SettingsScreen extends SpruceScreen {
 	private final SpruceOption turtlesOption;
 	private final SpruceOption ambientsOption;
 	private final SpruceOption pandasOption;
+	private final SpruceOption chainOption;
 	private final SpruceOption resetOption;
 
 	public SettingsScreen(@Nullable Screen parent) {
@@ -76,6 +77,14 @@ public class SettingsScreen extends SpruceScreen {
 			true
 		);
 
+		this.chainOption = new SpruceBooleanOption(
+			"betterleads.chain.option",
+			this.config.chain_leashes::value,
+			this.config.chain_leashes::setValue,
+			Text.translatable("betterleads.chain.option"),
+			true
+		);
+
 		this.resetOption = SpruceSimpleActionOption.reset(
 			btn -> {
 				this.config.reset();
@@ -101,6 +110,7 @@ public class SettingsScreen extends SpruceScreen {
 		list.addSingleOptionEntry(turtlesOption);
 		list.addSingleOptionEntry(ambientsOption);
 		list.addSingleOptionEntry(pandasOption);
+		list.addSingleOptionEntry(chainOption);
 		this.addDrawableSelectableElement(list);
 
 		this.addDrawableSelectableElement(
