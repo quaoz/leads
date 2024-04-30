@@ -13,3 +13,9 @@
 ### 1.2.2
 
 - Allow leashes to be chained based on [codehz-mcmods/chain-lead](https://github.com/codehz-mcmods/chain-lead) ([#10](https://github.com/quaoz/BetterLeads/issues/10))
+
+### 1.2.3
+
+- Add `/betterleads` command
+- Update tooltips
+- Fix chain leashing bugs

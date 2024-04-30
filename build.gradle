@@ -62,7 +62,7 @@ String fetchChangelog() {
 		}
 		return changelogContent
 	} else {
-		return null;
+		return null
 	}
 }
 
@@ -186,14 +186,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
+
 	}
 
 	repositories {

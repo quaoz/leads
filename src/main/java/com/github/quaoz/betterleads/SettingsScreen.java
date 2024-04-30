@@ -31,9 +31,9 @@ public class SettingsScreen extends SpruceScreen {
 
 		this.merchantsOption = new SpruceBooleanOption(
 			"betterleads.merchants.option",
-			this.config.villagers_enabled::value,
-			this.config.villagers_enabled::setValue,
-			Text.translatable("betterleads.merchants.option"),
+			this.config.merchants_enabled::value,
+			this.config.merchants_enabled::setValue,
+			Text.translatable("betterleads.merchants.tooltip"),
 			true
 		);
 
@@ -41,7 +41,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.hostiles.option",
 			this.config.hostiles_enabled::value,
 			this.config.hostiles_enabled::setValue,
-			Text.translatable("betterleads.hostiles.option"),
+			Text.translatable("betterleads.hostiles.tooltip"),
 			true
 		);
 
@@ -49,7 +49,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.watercreatures.option",
 			this.config.water_creatures_enabled::value,
 			this.config.water_creatures_enabled::setValue,
-			Text.translatable("betterleads.watercreatures.option"),
+			Text.translatable("betterleads.watercreatures.tooltip"),
 			true
 		);
 
@@ -57,7 +57,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.turtles.option",
 			this.config.turtles_enabled::value,
 			this.config.turtles_enabled::setValue,
-			Text.translatable("betterleads.turtles.option"),
+			Text.translatable("betterleads.turtles.tooltip"),
 			true
 		);
 
@@ -65,7 +65,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.ambients.option",
 			this.config.ambients_enabled::value,
 			this.config.ambients_enabled::setValue,
-			Text.translatable("betterleads.ambients.option"),
+			Text.translatable("betterleads.ambients.tooltip"),
 			true
 		);
 
@@ -73,7 +73,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.pandas.option",
 			this.config.pandas_enabled::value,
 			this.config.pandas_enabled::setValue,
-			Text.translatable("betterleads.pandas.option"),
+			Text.translatable("betterleads.pandas.tooltip"),
 			true
 		);
 
@@ -81,7 +81,7 @@ public class SettingsScreen extends SpruceScreen {
 			"betterleads.chain.option",
 			this.config.chain_leashes::value,
 			this.config.chain_leashes::setValue,
-			Text.translatable("betterleads.chain.option"),
+			Text.translatable("betterleads.chain.tooltip"),
 			true
 		);
 

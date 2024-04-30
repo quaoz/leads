@@ -1,5 +1,6 @@
 package com.github.quaoz.betterleads;
 
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -8,8 +9,8 @@ import org.quiltmc.loader.api.config.v2.QuiltConfig;
 public class BetterLeadsConfig extends ReflectiveConfig {
 	public static final BetterLeadsConfig INSTANCE = QuiltConfig.create(BetterLeads.MOD_ID, BetterLeads.MOD_ID, BetterLeadsConfig.class);
 
-	@Comment("Whether villagers and traders can be leashed.")
-	public final TrackedValue<Boolean> villagers_enabled = this.value(true);
+	@Comment("Whether merchants (villagers and traders) can be leashed.")
+	public final TrackedValue<Boolean> merchants_enabled = this.value(true);
 
 	@Comment("Whether hostile mobs can be leashed.")
 	public final TrackedValue<Boolean> hostiles_enabled = this.value(false);
@@ -26,21 +27,28 @@ public class BetterLeadsConfig extends ReflectiveConfig {
 	@Comment("Whether pandas can be leashed.")
 	public final TrackedValue<Boolean> pandas_enabled = this.value(true);
 
-	@Comment("Whether leashes can be chained.")
+	@Comment("Whether leashes can be chained between entities.")
 	public final TrackedValue<Boolean> chain_leashes = this.value(false);
 
 	/**
 	 * Resets all the config options.
 	 */
 	public void reset() {
-		villagers_enabled.removeOverride();
-		hostiles_enabled.removeOverride();
-		water_creatures_enabled.removeOverride();
-		turtles_enabled.removeOverride();
-		ambients_enabled.removeOverride();
-		pandas_enabled.removeOverride();
-		chain_leashes.removeOverride();
+		restoreDefault(merchants_enabled);
+		restoreDefault(hostiles_enabled);
+		restoreDefault(water_creatures_enabled);
+		restoreDefault(turtles_enabled);
+		restoreDefault(ambients_enabled);
+		restoreDefault(pandas_enabled);
+		restoreDefault(chain_leashes);
 
 		BetterLeads.LOGGER.info("Reset BetterLeads config");
+	}
+
+	/**
+	 * Restores the default value of a {@link TrackedValue}.
+	 */
+	private <T> void restoreDefault(@NotNull TrackedValue<T> value) {
+		value.setValue(value.getDefaultValue());
 	}
 }

@@ -1,11 +1,18 @@
 {
   "betterleads.menu.title": "BetterLeads",
-  "betterleads.merchants.option": "Leashable villagers",
+  "betterleads.merchants.option": "Leashable merchants",
+  "betterleads.merchants.tooltip": "Whether merchants (villagers and traders) can be leashed.",
   "betterleads.hostiles.option": "Leashable hostile mobs",
-  "betterleads.watercreatures.option": "Leashable fish and squid",
+  "betterleads.hostiles.tooltip": "Whether hostile mobs can be leashed.",
+  "betterleads.watercreatures.option": "Leashable water creatures",
+  "betterleads.watercreatures.tooltip": "Whether water creatures (fish and squid) can be leashed.",
   "betterleads.turtles.option": "Leashable turtles",
-  "betterleads.ambients.option": "Leashable bats",
+  "betterleads.turtles.tooltip": "Whether turtles can be leashed.",
+  "betterleads.ambients.option": "Leashable ambient mobs",
+  "betterleads.ambients.tooltip": "Whether ambient mobs (bats) can be leashed.",
   "betterleads.pandas.option": "Leashable pandas",
+  "betterleads.pandas.tooltip": "Whether pandas can be leashed.",
   "betterleads.chain.option": "Chainable leashes",
+  "betterleads.chain.tooltip": "Whether leashes can be chained between entities.",
   "gui.done": "Done"
 }

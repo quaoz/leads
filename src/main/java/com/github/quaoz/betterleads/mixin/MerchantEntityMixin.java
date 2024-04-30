@@ -21,6 +21,6 @@ abstract class MerchantEntityMixin extends PassiveEntity implements Npc, Merchan
 
 	@Inject(method = "canBeLeashedBy", at = @At("RETURN"), cancellable = true)
 	private void onCanBeLeashedBy(CallbackInfoReturnable<Boolean> cir) {
-		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.villagers_enabled.value());
+		cir.setReturnValue(cir.getReturnValue() || !this.isLeashed() && BetterLeadsConfig.INSTANCE.merchants_enabled.value());
 	}
 }
