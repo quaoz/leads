@@ -10,6 +10,9 @@ quilted_fabric_api = "9.0.0-alpha.8+0.97.0-1.20.4"
 spruceui_version = "5.0.3+1.20.2"
 modmenu_version = "9.0.0"
 
+minotaur = "2.+"
+cursegradle = "1.1.+"
+
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 quilt_mappings = { module = "org.quiltmc:quilt-mappings", version.ref = "quilt_mappings" }
@@ -26,6 +29,5 @@ quilted_fabric_api = ["quilted_fabric_api", "quilted_fabric_api_deprecated"]
 
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
-
-#modrinth_id=8XZCCV8b
-#curseforge_id=531503
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
+cursegradle = { id = "net.darkhax.curseforgegradle", version.ref = "cursegradle" }
