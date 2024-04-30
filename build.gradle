@@ -12,7 +12,7 @@ base {
 	archivesName = project.archives_base_name
 }
 
-version = "$project.version+${libs.versions.minecraft.get()}"
+version = "$project.mod_version+${libs.versions.minecraft.get()}"
 group = project.maven_group
 
 if (!(System.getenv("CURSEFORGE_TOKEN") || System.getenv("MODRINTH_TOKEN"))) {
@@ -37,7 +37,7 @@ String getVersionType() {
 
 String fetchChangelog() {
 	def changelogText = file('CHANGELOG.md').text
-	def regexVersion = ((String) project.version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
+	def regexVersion = ((String) project.mod_version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
 	def changelogRegex = ~"###? ${regexVersion}\\n\\n(( *- .+\\n)+)"
 	def matcher = changelogText =~ changelogRegex
 
@@ -121,7 +121,7 @@ jar {
 
 modrinth {
 	projectId = project.modrinth_id
-	versionName = "BetterLeads v${project.version}"
+	versionName = "BetterLeads v${version}"
 	gameVersions = [libs.minecraft.get().version]
 	versionType = isMCVersionNonRelease() ? "beta" : "release"
 	loaders = ["fabric", "quilt"]
@@ -174,7 +174,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 17", "Java 18")
 
-	mainFile.displayName = "BetterLeads v${project.version}"
+	mainFile.displayName = "BetterLeads v${version}"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
 
