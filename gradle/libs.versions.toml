@@ -11,7 +11,6 @@ spruceui_version = "5.0.3+1.20.2"
 modmenu_version = "9.0.0"
 
 minotaur = "2.+"
-cursegradle = "1.1.+"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -30,4 +29,3 @@ quilted_fabric_api = ["quilted_fabric_api", "quilted_fabric_api_deprecated"]
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
-cursegradle = { id = "net.darkhax.curseforgegradle", version.ref = "cursegradle" }

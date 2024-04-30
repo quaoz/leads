@@ -1,10 +1,12 @@
 plugins {
 	id 'maven-publish'
 	id 'java-library'
+	id 'net.darkhax.curseforgegradle' version '1.1.+'
 	alias libs.plugins.minotaur
-	alias libs.plugins.cursegradle
 	alias libs.plugins.quilt.loom
 }
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 base {
 	archivesName = project.archives_base_name
@@ -12,6 +14,11 @@ base {
 
 version = "$project.version+${libs.versions.minecraft.get()}"
 group = project.maven_group
+
+if (!(System.getenv("CURSEFORGE_TOKEN") || System.getenv("MODRINTH_TOKEN"))) {
+	version += "-local"
+}
+logger.lifecycle("Preparing version ${version}...")
 
 boolean isMCVersionNonRelease() {
 	return libs.minecraft.get().toString().matches('^\\d\\dw\\d\\d[a-z]$')
@@ -117,40 +124,28 @@ modrinth {
 		tasks.modrinthSyncBody.setEnabled(false)
 	}
 }
+tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
 
-curseforge {
+tasks.register('curseforge', TaskPublishCurseForge) {
+	setGroup("publishing")
+
 	if (System.getenv("CURSEFORGE_TOKEN")) {
-		apiKey = System.getenv("CURSEFORGE_TOKEN")
+		apiToken = System.getenv("CURSEFORGE_TOKEN")
 	} else {
-		project.logger.debug('CURSEFORGE_TOKEN is not set!')
-		tasks.curseforge.setEnabled(false)
+		setEnabled(false)
+		return
 	}
 
-	project {
-		id = project.curseforge_id
-		releaseType = this.getVersionType()
-		addGameVersion libs.minecraft.get().version
-		addGameVersion "Fabric"
-		addGameVersion "Quilt"
-		addGameVersion "Java 17"
-		addGameVersion "Java 18"
+	def mainFile = upload(project.curseforge_id, tasks.remapJar)
+	mainFile.releaseType = this.getVersionType()
+	mainFile.addGameVersion(libs.minecraft.get().version)
+	mainFile.addModLoader("Fabric", "Quilt")
+	mainFile.addJavaVersion("Java 17", "Java 18")
 
-		mainArtifact(remapJar) {
-			displayName = "BetterLeads v${project.version} (${libs.minecraft.get().version})"
-
-			relations {
-				requiredDependency "fabric-api"
-				optionalDependency "modmenu"
-			}
-		}
-
-		afterEvaluate {
-			uploadTask.setGroup("publishing")
-			uploadTask.dependsOn("remapJar")
-		}
-	}
+	mainFile.displayName = "BetterLeads v${project.version} (${libs.minecraft.get().version})"
+	mainFile.addRequirement("fabric-api")
+	mainFile.addOptional("modmenu")
 }
-tasks.curseforge.setGroup("publishing")
 
 publishing {
 	publications {
